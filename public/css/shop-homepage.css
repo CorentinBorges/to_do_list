@@ -34,6 +34,10 @@ body {
     width: 100%;
 }
 
+.mr-2{
+    margin-right: 10px;
+}
+
 .ratings {
     padding-right: 10px;
     padding-left: 10px;
@@ -52,3 +56,4 @@ body {
 footer {
     margin: 50px 0;
 }
+

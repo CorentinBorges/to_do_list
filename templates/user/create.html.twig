@@ -11,4 +11,10 @@
             <button type="submit" class="btn btn-success pull-right">Ajouter</button>
         {{ form_end(form) }}
     </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script src="{{ asset('js\checkbox_roles') }}"></script>
 {% endblock %}
