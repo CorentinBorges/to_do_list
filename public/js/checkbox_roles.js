@@ -14,6 +14,7 @@ function checkChangeUser() {
     }
     else if (checkUser.getAttribute('checked') === 'false') {
         this.setAttribute('checked', 'checked');
+        checkAdmin.setAttribute('class','false');
         checkAdmin.checked=false;
 
     }
@@ -26,11 +27,13 @@ function checkChangeUser() {
 function checkChangeAdmin() {
     if (this.getAttribute('class') ==='isChecked') {
         this.setAttribute('class','false');
-        checkAdmin.setAttribute('checked','checked' )
+        checkUser.setAttribute('checked','checked' )
+
         checkUser.checked=true
     }
     else if(this.getAttribute('class') ==='false'){
         checkAdmin.setAttribute('class','isChecked' )
+        checkUser.setAttribute('checked', 'false');
         checkUser.checked=false
     }
 }

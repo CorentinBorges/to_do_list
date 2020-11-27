@@ -41,6 +41,7 @@ class UserType extends AbstractType
                 'required' => false,
                 'label' => 'Admin',
                 'label_attr' => ['class' => 'mr-2'],
+                'attr' => ['class' => 'false' ]
             ])
         ;
     }
