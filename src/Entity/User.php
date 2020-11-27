@@ -91,9 +91,17 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    public function setRoles($roles)
+    public function setRoles(string $role)
     {
-        $this->roles = $roles;
+        if ($role === 'admin' ) {
+            $this->roles=['ADMIN_ROLE','USER_ROLE'];
+        }
+        if ($role === 'user' ) {
+            $this->roles=['USER_ROLE'];
+        }
+        else{
+            throw new \InvalidArgumentException("role can just be 'user' or 'admin'");
+        }
     }
 
     public function eraseCredentials()
