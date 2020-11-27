@@ -40,9 +40,8 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @var array
      *
-     * @ORM\Column (type="array")
+     * @ORM\Column (type="json")
      */
     private $roles;
 
@@ -86,9 +85,14 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
+    }
+
+    public function isGranted($role)
+    {
+        return in_array($role, $this->getRoles());
     }
 
     public function setRoles(string $role)
