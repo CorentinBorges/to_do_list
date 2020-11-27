@@ -16,6 +16,7 @@ class SecurityController extends AbstractController
     {
 //        $authenticationUtils = $this->get('security.authentication_utils');
 
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -36,7 +37,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logout", name="logout")
      */
-    public function logoutCheck()
+    public function logout()
     {
         // This code is never executed.
     }
