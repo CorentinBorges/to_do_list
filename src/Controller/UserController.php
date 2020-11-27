@@ -17,7 +17,7 @@ class UserController extends AbstractController
     {
         return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('AppBundle:User')->findAll()]);
     }
-
+    //todo: user have the roles user AND admin
     /**
      * @Route("/users/create", name="user_create")
      */
