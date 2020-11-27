@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,8 +22,27 @@ class UserType extends AbstractType
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
+
+
             ])
-            ->add('email', EmailType::class, ['label' => 'Adresse email'])
+            ->add('email', EmailType::class, [
+                'label' => 'Adresse email',
+                'label_attr' => ['class' => 'mr-2'],
+            ])
+            ->add('roleUser', CheckboxType::class,[
+                'mapped' => false,
+                'required' => false,
+                'label' => 'User',
+                'label_attr' => ['class' => 'mr-2'],
+                'attr' => ['checked' => 'checked',]
+            ])
+            ->add('roleAdmin', CheckboxType::class,[
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Admin',
+                'label_attr' => ['class' => 'mr-2'],
+                'attr' => ['class' => 'false' ]
+            ])
         ;
     }
 }
