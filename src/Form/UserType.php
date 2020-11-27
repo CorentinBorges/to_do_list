@@ -34,13 +34,13 @@ class UserType extends AbstractType
                 'required' => false,
                 'label' => 'User',
                 'label_attr' => ['class' => 'mr-2'],
-                'attr' => ['checked' => 'checked']
+                'attr' => ['checked' => 'checked',]
             ])
             ->add('roleAdmin', CheckboxType::class,[
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Admin',
-                'label_attr' => ['class' => 'mr-2']
+                'label_attr' => ['class' => 'mr-2'],
             ])
         ;
     }
