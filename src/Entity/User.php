@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,6 +16,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface
 {
+
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -40,10 +44,20 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\OneToMany(targetEntity="Task",mappedBy="user")
+     */
+    private $tasks;
+
+    /**
      *
      * @ORM\Column (type="json")
      */
     private $roles=[];
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -68,6 +82,14 @@ class User implements UserInterface
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks() : Collection
+    {
+        return $this->tasks;
     }
 
     public function setPassword($password)

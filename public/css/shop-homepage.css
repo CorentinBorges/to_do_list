@@ -30,6 +30,10 @@ body {
     white-space: nowrap;
 }
 
+.font-italic{
+    font-style: italic;
+}
+
 .thumbnail img {
     width: 100%;
 }

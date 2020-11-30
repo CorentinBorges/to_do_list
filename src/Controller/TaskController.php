@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +16,17 @@ class TaskController extends AbstractController
      */
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findAll()]);
+        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
+        if ($this->getUser()) {
+            $task = $this->getUser()->getTasks();
+//            $task[] = $taskRepo->findOneBy(['user' => null]);
+        }else{
+            $task = new Task();
+        }
+
+        return $this->render('task/list.html.twig', [
+            'tasks' => $task]);
+
     }
 
     /**
@@ -30,6 +41,14 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if ($this->getUser()) {
+                /**
+                 * @var User $user
+                 */
+                $user = $this->getUser();
+                $task->setUser($user);
+            }
 
             $em->persist($task);
             $em->flush();
