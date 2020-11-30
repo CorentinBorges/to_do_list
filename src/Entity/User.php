@@ -100,7 +100,7 @@ class User implements UserInterface
         if ($role === 'admin' ) {
             $this->roles=['ADMIN_ROLE','USER_ROLE'];
         }
-        if ($role === 'user' ) {
+        elseif ($role === 'user' ) {
             $this->roles=['USER_ROLE'];
         }
         else{
