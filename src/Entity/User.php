@@ -43,7 +43,7 @@ class User implements UserInterface
      *
      * @ORM\Column (type="json")
      */
-    private $roles;
+    private $roles=[];
 
     public function getId()
     {
@@ -87,7 +87,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return $this->roles;
+        return array_unique($this->roles);
     }
 
     public function isGranted($role)
@@ -98,10 +98,10 @@ class User implements UserInterface
     public function setRoles(string $role)
     {
         if ($role === 'admin' ) {
-            $this->roles=['ADMIN_ROLE','USER_ROLE'];
+            $this->roles=['ROLE_ADMIN','ROLE_USER'];
         }
         elseif ($role === 'user' ) {
-            $this->roles=['USER_ROLE'];
+            $this->roles=['ROLE_USER'];
         }
         else{
             throw new \InvalidArgumentException("role can just be 'user' or 'admin'");
