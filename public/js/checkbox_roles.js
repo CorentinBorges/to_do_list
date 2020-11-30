@@ -18,10 +18,6 @@ function checkChangeUser() {
         checkAdmin.checked=false;
 
     }
-    // else if (checkUser.getAttribute('checked') === 'false') {
-    //     // this.setAttribute('checked', 'checked');
-    //     checkAdmin.checked=false;
-    // }
 }
 
 function checkChangeAdmin() {
