@@ -36,6 +36,11 @@ class Task
     private $content;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class,inversedBy="tasks")
+     */
+    private $user;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $isDone;
@@ -76,9 +81,20 @@ class Task
         return $this->content;
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+        return $this;
     }
 
     public function isDone()
