@@ -38,10 +38,11 @@
         <!-- Page Content -->
         <div class="container">
             <div class="row">
-                {% if user is defined and (app.user.granted('ADMIN_ROLE')) %}
+                {% if app.user.granted('ADMIN_ROLE') is defined and (app.user.granted('ADMIN_ROLE')) %}
                     <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
+                    <a href="{{ path('user_list') }}" class="btn btn-primary">Liste des utilisateurs</a>
                 {% endif %}
-                {% if user is defined and (app.user.granted('USER_ROLE')) %}
+                {% if app.user.granted('USER_ROLE') is defined and (app.user.granted('USER_ROLE')) %}
                     <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                 {% else %}
                     <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
