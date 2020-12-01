@@ -44,7 +44,7 @@ class TaskCache
         $this->taskRepository = $taskRepository;
     }
 
-    public function getList($itemName, int $expiredAfter, User $user=null)
+    public function getList(string $itemName, int $expiredAfter, User $user=null)
     {
         /**
          * @var CacheItemInterface $element

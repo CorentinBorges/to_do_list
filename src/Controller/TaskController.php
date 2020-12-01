@@ -38,7 +38,8 @@ class TaskController extends AbstractController
         $user = $this->getUser();
 
         if ($user) {
-            $tasks = $this->taskCache->getList('task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),259200,$user);
+            $tasks = $this->taskCache->getList(
+                'task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),259200,$user);
         }else{
             $tasks = [];
         }
