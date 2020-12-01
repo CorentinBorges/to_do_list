@@ -26,7 +26,9 @@ class TaskController extends AbstractController
                  * @var User $anonUser
                  */
                 $anonUser = $userRepository->findAnonyme();
-                $task[] = $taskRepository->findOneBy(['user' => $anonUser]);
+                foreach ($taskRepository->findBy(['user' => $anonUser]) as $newTask){
+                    $task->add($newTask);
+                } ;
             }
         }else{
             $task = new Task();
