@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,12 +16,17 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction()
+    public function listAction(UserRepository $userRepository,TaskRepository $taskRepository)
     {
-        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
         if ($this->getUser()) {
             $task = $this->getUser()->getTasks();
-//            $task[] = $taskRepo->findOneBy(['user' => null]);
+            if ($userRepository->findAnonyme()) {
+                /**
+                 * @var User $anonUser
+                 */
+                $anonUser = $userRepository->findAnonyme();
+                $task[] = $taskRepository->findOneBy(['user' => $anonUser]);
+            }
         }else{
             $task = new Task();
         }
@@ -32,7 +39,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, UserRepository $userRepository)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -47,8 +54,14 @@ class TaskController extends AbstractController
                  * @var User $user
                  */
                 $user = $this->getUser();
-                $task->setUser($user);
+            }else{
+                if ($userRepository->findOneBy(['username' => 'anonyme'])) {
+                    $user = $userRepository->findOneBy(['username' => 'anonyme']);
+                }else{
+                    $user = $userRepository->createAnonyme();
+                }
             }
+            $task->setUser($user);
 
             $em->persist($task);
             $em->flush();
