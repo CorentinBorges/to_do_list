@@ -14,17 +14,16 @@
                     </h4>
                     <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
-<<<<<<< HEAD
-                    <p class="font-italic"> Créé par {{ task.user.username }} </p>
-=======
-{#                    <p class="font-italic">#}
-{#                        {% if task.user is not null %}#}
-{#                            Créé par {{ task.user.username }}#}
-{#                        {% else %}#}
-{#                            Créé par 'anonyme'#}
-{#                        {% endif %}#}
-{#                    </p>#}
->>>>>>> 358d67e5121cfe5c4a8dd6dc4906a3980ecaea05
+{#<<<<<<< HEAD#}
+{#                    <p class="font-italic"> Créé par {{ task.user.username }} </p>#}
+{#=======#}
+                    <p class="font-italic">
+                        {% if task.user is not null %}
+                            Créé par {{ task.user.username }}
+                        {% else %}
+                            Créé par 'anonyme'
+                        {% endif %}
+                    </p>
                 </div>
                 <div>
                     <form action="{{ path('task_toggle', {'id' : task.id }) }}">

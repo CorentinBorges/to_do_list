@@ -14,41 +14,19 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskController extends AbstractController
 {
-//    /**
-//     * @Route("/tasks", name="task_list")
-//     */
-//    public function listAction(UserRepository $userRepository,TaskRepository $taskRepository)
-//    {
-//        if ($this->getUser()) {
-//            $task = $this->getUser()->getTasks();
-//            if ($userRepository->findAnonyme()) {
-//                /**
-//                 * @var User $anonUser
-//                 */
-//                $anonUser = $userRepository->findAnonyme();
-//                $task[] = $taskRepository->findOneBy(['user' => $anonUser]);
-//            }
-//        }else{
-//            $task = new Task();
-//        }
-//
-//        return $this->render('task/list.html.twig', [
-//            'tasks' => $task]);
-//
-//    }
-
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(Security $security)
+    public function listAction(UserRepository $userRepository,TaskRepository $taskRepository)
     {
-        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
         if ($this->getUser()) {
             $task = $this->getUser()->getTasks();
-            if ($security->isGranted('ROLE_ADMIN')) {
-                foreach ($taskRepo->findBy(['user' => null]) as $newTask) {
-                    $task->add($newTask);
-                }
+            if ($userRepository->findAnonyme()) {
+                /**
+                 * @var User $anonUser
+                 */
+                $anonUser = $userRepository->findAnonyme();
+                $task[] = $taskRepository->findOneBy(['user' => $anonUser]);
             }
         }else{
             $task = new Task();
