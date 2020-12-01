@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Cache\TaskCache;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
@@ -17,27 +18,34 @@ use Symfony\Component\Security\Core\Security;
 class TaskController extends AbstractController
 {
     /**
+     * @var TaskCache
+     */
+    private $taskCache;
+
+    public function __construct(TaskCache $taskCache)
+    {
+        $this->taskCache = $taskCache;
+    }
+
+    /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(UserRepository $userRepository,TaskRepository $taskRepository)
+    public function listAction()
     {
-        if ($this->getUser()) {
-            $task = $this->getUser()->getTasks();
-            if ($userRepository->findAnonyme()) {
-                /**
-                 * @var User $anonUser
-                 */
-                $anonUser = $userRepository->findAnonyme();
-                foreach ($taskRepository->findBy(['user' => $anonUser]) as $newTask){
-                    $task->add($newTask);
-                } ;
-            }
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        if ($user) {
+            $tasks = $this->taskCache->getList(
+                'task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),259200,$user);
         }else{
-            $task = new Task();
+            $tasks = [];
         }
 
         return $this->render('task/list.html.twig', [
-            'tasks' => $task]);
+            'tasks' => $tasks]);
 
     }
 
@@ -72,6 +80,7 @@ class TaskController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->taskCache->deleteCache('task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername());
 
             return $this->redirectToRoute('task_list');
         }
@@ -105,6 +114,8 @@ class TaskController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
+            $this->taskCache->deleteCache(
+                'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
 
             return $this->redirectToRoute('task_list');
         }
@@ -124,7 +135,8 @@ class TaskController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-
+        $this->taskCache->deleteCache(
+            'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
         return $this->redirectToRoute('task_list');
     }
 
@@ -138,7 +150,8 @@ class TaskController extends AbstractController
         $em->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
-
+        $this->taskCache->deleteCache(
+            'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
         return $this->redirectToRoute('task_list');
     }
 }

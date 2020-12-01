@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Cache\UserCache;
 use App\Entity\User;
 use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -18,11 +19,23 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
+     * @var UserCache
+     */
+    private $userCache;
+
+    public function __construct(UserCache $userCache)
+    {
+        $this->userCache = $userCache;
+    }
+
+
+    /**
      * @Route("/users", name="user_list")
      */
     public function listAction()
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('App:User')->findAll()]);
+        $users = $this->userCache->getList('users_list_' . $_SERVER['APP_ENV'], 259200);
+        return $this->render('user/list.html.twig', ['users' => $users]);
     }
     //todo: user have the roles user AND admin
     /**
@@ -49,6 +62,7 @@ class UserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
+            $this->userCache->delete('users_list_' . $_SERVER['APP_ENV']);
 
             return $this->redirectToRoute('user_list');
         }
@@ -80,6 +94,7 @@ class UserController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
+            $this->userCache->delete('users_list_' . $_SERVER['APP_ENV']);
 
             return $this->redirectToRoute('user_list');
         }
