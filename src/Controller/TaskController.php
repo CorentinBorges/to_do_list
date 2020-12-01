@@ -8,6 +8,8 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -80,10 +82,23 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request)
+    public function editAction(Task $task, Request $request, Security $security)
     {
-        $form = $this->createForm(TaskType::class, $task);
+        /**
+         * @var User $userTask
+         */
+        $userTask = $task->getUser();
+        if (!$security->isGranted('ROLE_ADMIN')) {
+            if ($this->getUser() !== $userTask ) {
+                throw new AccessDeniedHttpException('Vous ne pouvez pas modifier cette tâche');
+            }
+        } elseif($userTask->getUsername() !== 'anonyme') {
+            if ($this->getUser() !== $userTask ) {
+                throw new AccessDeniedHttpException('Vous ne pouvez pas modifier cette tâche');
+            }
+        }
 
+        $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
