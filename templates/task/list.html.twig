@@ -14,9 +14,7 @@
                     </h4>
                     <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                     <p>{{ task.content }}</p>
-{#<<<<<<< HEAD#}
-{#                    <p class="font-italic"> Créé par {{ task.user.username }} </p>#}
-{#=======#}
+
                     <p class="font-italic">
                         {% if task.user is not null %}
                             Créé par {{ task.user.username }}

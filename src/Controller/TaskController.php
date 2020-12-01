@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Cache\TaskCache;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
@@ -19,25 +20,21 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks", name="task_list")
      */
-    public function listAction(UserRepository $userRepository,TaskRepository $taskRepository)
+    public function listAction(TaskCache $taskCache)
     {
-        if ($this->getUser()) {
-            $task = $this->getUser()->getTasks();
-            if ($userRepository->findAnonyme()) {
-                /**
-                 * @var User $anonUser
-                 */
-                $anonUser = $userRepository->findAnonyme();
-                foreach ($taskRepository->findBy(['user' => $anonUser]) as $newTask){
-                    $task->add($newTask);
-                } ;
-            }
-        }else{
-            $task = new Task();
-        }
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
 
+        if ($user) {
+            $tasks = $taskCache->getList('task_list ' . $_SERVER['APP_ENV'].' '.$user->getUsername(),259200,$user);
+        }else{
+            $tasks = [];
+        }
+        
         return $this->render('task/list.html.twig', [
-            'tasks' => $task]);
+            'tasks' => $tasks]);
 
     }
 
