@@ -17,10 +17,9 @@ use Symfony\Component\Security\Core\Security;
 
 class TaskController extends AbstractController
 {
-    /**
-     * @var TaskCache
-     */
-    private $taskCache;
+    //todo: edit audit with butons
+    
+    private TaskCache $taskCache;
 
     public function __construct(TaskCache $taskCache)
     {
