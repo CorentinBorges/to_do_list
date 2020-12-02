@@ -43,10 +43,15 @@
                     Vous devez être connecter pour commencer à créer des tâches
                     {#                <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>#}
                 </div>
-            {% else %}
+            {% elseif page == 'list_done' %}
                 <div class="alert alert-warning" role="alert">
-                    Il n'y a pas encore de tâches enregistrées.
-{#                    <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>#}
+                    Il n'y a pas de tâches terminées.
+                    {#                    <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>#}
+                </div>
+            {% elseif page == 'list_not_done' %}
+                <div class="alert alert-warning" role="alert">
+                    Il n'y a pas de tâches en cours.
+                    {#                    <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>#}
                 </div>
             {% endif %}
         {% endfor %}
