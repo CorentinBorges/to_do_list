@@ -10,6 +10,9 @@ class TaskControllerTest extends AbstractWebTestCase
 {
     public function testListActionWithoutUser()
     {
+        $uriLogin = $this->client->request('GET', '/login')->getBaseHref();
+
         $this->client->request('GET', '/tasks');
+        self::assertResponseRedirects($uriLogin);
     }
 }

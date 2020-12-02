@@ -5,12 +5,17 @@ namespace App\Tests;
 
 
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 abstract class AbstractWebTestCase extends WebTestCase
 {
@@ -43,5 +48,42 @@ abstract class AbstractWebTestCase extends WebTestCase
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->dropSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
         $schemaTool->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
+
+    }
+
+    public function createUser()
+    {
+        $user = new User();
+        $user->setUsername('userTest');
+        $user->setEmail("letest@gmail.com");
+        $password = $this->encoderFactory
+            ->getEncoder(User::class)
+            ->encodePassword('testPass','');
+        $user->setPassword($password);
+        $user->setRoles('user');
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user;
+    }
+
+    public function logIn(User $user)
+    {
+        $session = self::$container->get('session');
+
+        // somehow fetch the user (e.g. using the user repository)
+
+        $firewallName = 'main';
+        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+        $firewallContext = 'main';
+
+        // you may need to use a different token class depending on your application.
+        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+        $token = new UsernamePasswordToken($user, null, $firewallName, $user->getRoles());
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }
