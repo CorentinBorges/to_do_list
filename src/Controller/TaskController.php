@@ -45,7 +45,8 @@ class TaskController extends AbstractController
         }
 
         return $this->render('task/list.html.twig', [
-            'tasks' => $tasks]);
+            'tasks' => $tasks,
+            'user' => $user]);
 
     }
 
