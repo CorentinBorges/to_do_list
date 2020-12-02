@@ -6,11 +6,9 @@ use App\Cache\TaskCache;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
-use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -18,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 class TaskController extends AbstractController
 {
     //todo: edit audit with butons
-    
+
     private TaskCache $taskCache;
 
     public function __construct(TaskCache $taskCache)
@@ -38,15 +36,53 @@ class TaskController extends AbstractController
 
         if ($user) {
             $tasks = $this->taskCache->getList(
-                'task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),259200,$user);
+                'task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),
+                259200,
+                false,
+                $user
+            );
+        }else{
+            $tasks = [];
+        }
+        $page = 'list_not_done';
+
+
+        return $this->render('task/list.html.twig', [
+            'tasks' => $tasks,
+            'user' => $user,
+            'page' => $page
+        ]);
+
+    }
+
+    /**
+     * @Route("/tasksDone", name="task_done")
+     */
+    public function listDoneTasks()
+    {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+
+        if ($user) {
+            $tasks = $this->taskCache->getList(
+                'task_list_done_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),
+                259200,
+                true,
+                $user
+            );
         }else{
             $tasks = [];
         }
 
+        $page = 'list_done';
+
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
-            'user' => $user]);
-
+            'user' => $user,
+            'page' => $page
+        ]);
     }
 
     /**
@@ -107,6 +143,7 @@ class TaskController extends AbstractController
             }
         }
 
+
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
@@ -116,6 +153,10 @@ class TaskController extends AbstractController
             $this->addFlash('success', 'La tâche a bien été modifiée.');
             $this->taskCache->deleteCache(
                 'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+            $this->taskCache->deleteCache(
+                'task_list_done_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+
+
 
             return $this->redirectToRoute('task_list');
         }
@@ -135,9 +176,16 @@ class TaskController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+
+        $this->taskCache->deleteCache(
+            'task_list_done_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
         $this->taskCache->deleteCache(
             'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
-        return $this->redirectToRoute('task_list');
+        if ($task->isDone()){
+            return $this->redirectToRoute('task_list');
+        } else{
+            return $this->redirectToRoute('task_done') ;
+        }
     }
 
     /**
