@@ -44,22 +44,28 @@ class TaskCache
         $this->taskRepository = $taskRepository;
     }
 
-    public function getList(string $itemName, int $expiredAfter, User $user=null)
+    public function getList(string $itemName, int $expiredAfter, bool $taskDone, User $user=null )
     {
+//        $this->deleteCache($itemName);
+
         /**
          * @var CacheItemInterface $element
          */
         $element = $this->filesystemAdapter->getItem($itemName);
         if (!$element->isHit()) {
             $tasks = new ArrayCollection();
-            foreach ($user->getTasks()as $task){
-                $tasks->add($task);
+            foreach ($user->getTasks() as $task){
+                if ($task->isDone() === $taskDone) {
+                    $tasks->add($task);
+                }
             }
                 if ($this->security->isGranted('ROLE_ADMIN')) {
                     if ($this->userRepository->findAnonyme()) {
                         $anonUser = $this->userRepository->findAnonyme();
                         foreach ($this->taskRepository->findBy(['user' => $anonUser]) as $newTask){
-                            $tasks->add($newTask);
+                            if ($newTask->isDone() === $taskDone) {
+                                $tasks->add($newTask);
+                            }
                         }
                     }
                 }
