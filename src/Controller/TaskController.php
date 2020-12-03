@@ -161,9 +161,6 @@ class TaskController extends AbstractController
                 'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
             $this->taskCache->deleteCache(
                 'task_list_done_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
-
-
-
             return $this->redirectToRoute('task_list');
         }
 

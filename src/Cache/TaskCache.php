@@ -46,25 +46,18 @@ class TaskCache
 
     public function getList(string $itemName, int $expiredAfter, bool $taskDone, User $user=null )
     {
-//        $this->deleteCache($itemName);
-
         /**
          * @var CacheItemInterface $element
          */
         $element = $this->filesystemAdapter->getItem($itemName);
-        if (!$element->isHit()) {
-            $tasks = new ArrayCollection();
-            foreach ($user->getTasks() as $task){
-                if ($task->isDone() === $taskDone) {
-                    $tasks->add($task);
-                }
-            }
-                if ($this->security->isGranted('ROLE_ADMIN')) {
+        if (!$element->isHit() || $_SERVER['APP_ENV'] === 'test') {
+            $tasks = $this->taskRepository->findBy(['user' => $user, 'isDone' => $taskDone]);
+            if ($this->security->isGranted('ROLE_ADMIN')) {
                     if ($this->userRepository->findAnonyme()) {
                         $anonUser = $this->userRepository->findAnonyme();
                         foreach ($this->taskRepository->findBy(['user' => $anonUser]) as $newTask){
                             if ($newTask->isDone() === $taskDone) {
-                                $tasks->add($newTask);
+                                $tasks[] = $newTask;
                             }
                         }
                     }
