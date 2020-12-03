@@ -4,8 +4,7 @@
     {% if error %}
         <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-
-    <form action="{{ path('login_check') }}" method="post">
+    <form action="{{ path('login_check') }}" name="login" method="post">
         <label for="username">Nom d'utilisateur :</label>
         <input type="text" id="username" name="_username" value="{{ last_username }}" />
 

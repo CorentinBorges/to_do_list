@@ -21,13 +21,12 @@ class UserController extends AbstractController
     /**
      * @var UserCache
      */
-    private $userCache;
+    private UserCache $userCache;
 
     public function __construct(UserCache $userCache)
     {
         $this->userCache = $userCache;
     }
-
 
     /**
      * @Route("/users", name="user_list")

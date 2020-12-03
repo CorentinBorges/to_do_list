@@ -5,6 +5,7 @@ namespace App\Tests;
 
 
 
+use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -48,7 +49,6 @@ abstract class AbstractWebTestCase extends WebTestCase
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->dropSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
         $schemaTool->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
-
     }
 
     public function createUser()
@@ -64,6 +64,64 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $user;
+    }
+
+    public function createAdminUser()
+    {
+        $user = new User();
+        $user->setUsername('adminUser');
+        $user->setEmail("user@gmail.com");
+        $password = $this->encoderFactory
+            ->getEncoder(User::class)
+            ->encodePassword('testAdmin','');
+        $user->setPassword($password);
+        $user->setRoles('admin');
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user;
+    }
+
+    public function createAnonymeUser()
+    {
+        $user = new User();
+        $user->setUsername('anonyme');
+        $user->setEmail("anonyme@gmail.com");
+        $password = $this->encoderFactory
+            ->getEncoder(User::class)
+            ->encodePassword('testPass','');
+        $user->setPassword($password);
+        $user->setRoles('user');
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user;
+    }
+
+    public function createAnonymeTask(bool $isDone=null)
+    {
+        $user = $this->createAnonymeUser();
+        $task = new Task();
+        $task->setUser($user);
+        $task->setTitle('Test Task');
+        $task->setContent('Content test');
+        if ($isDone) {
+            $task->toggle($isDone);
+        }
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+        return $task;
+    }
+
+    public function createTask(User $user, bool $isDone=false, string $title=null, string $content=null)
+    {
+        $task = new Task();
+        $task->setUser($user);
+        $title === null ? $task->setTitle('Test Task') : $task->setTitle($title);
+        $content === null ? $task->setContent('Content test') : $task->setContent($content);
+        $task->toggle($isDone);
+
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+        return $task;
     }
 
     public function logIn(User $user)
@@ -86,4 +144,5 @@ abstract class AbstractWebTestCase extends WebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
     }
+
 }
