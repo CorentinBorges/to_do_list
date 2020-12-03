@@ -54,8 +54,19 @@ class TaskCache
         if (!$element->isHit() || $_SERVER['APP_ENV'] === 'test') {
             $tasks = $this->taskRepository->findBy(['user' => $user, 'isDone' => $taskDone]);
             if ($this->security->isGranted('ROLE_ADMIN')) {
+                /**
+                 * @var User $anonUser
+                 */
+                $anonUser = $this->userRepository->findAnonyme();
+                if ($this->taskRepository->findBy(['user' => null] )) {
+                    foreach ($this->taskRepository->findBy(['user' => null]) as $anonTask){
+                        /**
+                         * @var Task $anonTask
+                         */
+                        $anonTask->setUser($anonUser);
+                    }
+                }
                     if ($this->userRepository->findAnonyme()) {
-                        $anonUser = $this->userRepository->findAnonyme();
                         foreach ($this->taskRepository->findBy(['user' => $anonUser]) as $newTask){
                             if ($newTask->isDone() === $taskDone) {
                                 $tasks[] = $newTask;
