@@ -38,7 +38,6 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected $encoderFactory;
 
 
-
     protected function setUp() : void
     {
         $this->client = static::createClient();
@@ -50,7 +49,6 @@ abstract class AbstractWebTestCase extends WebTestCase
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->dropSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
         $schemaTool->createSchema($this->entityManager->getMetadataFactory()->getAllMetadata());
-
     }
 
     public function createUser()
@@ -124,7 +122,6 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->entityManager->persist($task);
         $this->entityManager->flush();
         return $task;
-
     }
 
     public function logIn(User $user)
@@ -147,4 +144,5 @@ abstract class AbstractWebTestCase extends WebTestCase
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
     }
+
 }

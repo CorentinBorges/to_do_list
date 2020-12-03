@@ -45,7 +45,9 @@
                 {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
                 {% else %}
-                    <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
+                    {% if page is defined and page == 'login'%}{% else %}
+                        <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
+                    {% endif%}
                 {% endif %}
             </div>
 

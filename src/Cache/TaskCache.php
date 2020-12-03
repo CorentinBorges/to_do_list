@@ -50,6 +50,7 @@ class TaskCache
          * @var CacheItemInterface $element
          */
         $element = $this->filesystemAdapter->getItem($itemName);
+//        $this->filesystemAdapter->delete($itemName);
         if (!$element->isHit() || $_SERVER['APP_ENV'] === 'test') {
             $tasks = $this->taskRepository->findBy(['user' => $user, 'isDone' => $taskDone]);
             if ($this->security->isGranted('ROLE_ADMIN')) {
