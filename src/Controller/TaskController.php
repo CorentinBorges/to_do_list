@@ -9,6 +9,8 @@ use App\Form\TaskType;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,12 +44,12 @@ class TaskController extends AbstractController
 
         if ($user) {
             $tasks = $this->taskCache->getList(
-                'task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),
+                'task_list_' . $_SERVER['APP_ENV'] . '_' . $user->getUsername(),
                 259200,
                 false,
                 $user
             );
-        }else{
+        } else {
             $tasks = [];
         }
         $page = 'list_not_done';
@@ -58,7 +60,6 @@ class TaskController extends AbstractController
             'user' => $user,
             'page' => $page
         ]);
-
     }
 
     /**
@@ -73,12 +74,12 @@ class TaskController extends AbstractController
 
         if ($user) {
             $tasks = $this->taskCache->getList(
-                'task_list_done_' . $_SERVER['APP_ENV'].'_'.$user->getUsername(),
+                'task_list_done_' . $_SERVER['APP_ENV'] . '_' . $user->getUsername(),
                 259200,
                 true,
                 $user
             );
-        }else{
+        } else {
             $tasks = [];
         }
 
@@ -93,6 +94,9 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/create", name="task_create")
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @return RedirectResponse|Response
      */
     public function createAction(Request $request, UserRepository $userRepository)
     {
@@ -109,10 +113,10 @@ class TaskController extends AbstractController
                  * @var User $user
                  */
                 $user = $this->getUser();
-            }else{
+            } else {
                 if ($userRepository->findOneBy(['username' => 'anonyme'])) {
                     $user = $userRepository->findOneBy(['username' => 'anonyme']);
-                }else{
+                } else {
                     $user = $userRepository->createAnonyme();
                 }
             }
@@ -122,7 +126,7 @@ class TaskController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
-            $this->taskCache->deleteCache('task_list_' . $_SERVER['APP_ENV'].'_'.$user->getUsername());
+            $this->taskCache->deleteCache('task_list_' . $_SERVER['APP_ENV'] . '_' . $user->getUsername());
 
             return $this->redirectToRoute('task_list');
         }
@@ -132,6 +136,10 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * @param Task $task
+     * @param Request $request
+     * @param Security $security
+     * @return RedirectResponse|Response
      */
     public function editAction(Task $task, Request $request, Security $security)
     {
@@ -140,11 +148,11 @@ class TaskController extends AbstractController
          */
         $userTask = $task->getUser();
         if (!$security->isGranted('ROLE_ADMIN')) {
-            if ($this->getUser() !== $userTask ) {
+            if ($this->getUser() !== $userTask) {
                 throw new AccessDeniedHttpException('Vous ne pouvez pas modifier cette tâche');
             }
-        } elseif($userTask->getUsername() !== 'anonyme') {
-            if ($this->getUser() !== $userTask ) {
+        } elseif ($userTask->getUsername() !== 'anonyme') {
+            if ($this->getUser() !== $userTask) {
                 throw new AccessDeniedHttpException('Vous ne pouvez pas modifier cette tâche');
             }
         }
@@ -158,9 +166,11 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
             $this->taskCache->deleteCache(
-                'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+                'task_list_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+            );
             $this->taskCache->deleteCache(
-                'task_list_done_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+                'task_list_done_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+            );
             return $this->redirectToRoute('task_list');
         }
 
@@ -172,6 +182,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @param Task $task
+     * @return RedirectResponse
      */
     public function toggleTaskAction(Task $task)
     {
@@ -181,18 +193,22 @@ class TaskController extends AbstractController
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
         $this->taskCache->deleteCache(
-            'task_list_done_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+            'task_list_done_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+        );
         $this->taskCache->deleteCache(
-            'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
-        if ($task->isDone()){
+            'task_list_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+        );
+        if ($task->isDone()) {
             return $this->redirectToRoute('task_list');
-        } else{
+        } else {
             return $this->redirectToRoute('task_done') ;
         }
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @param Task $task
+     * @return RedirectResponse
      */
     public function deleteTaskAction(Task $task)
     {
@@ -202,7 +218,8 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
         $this->taskCache->deleteCache(
-            'task_list_' . $_SERVER['APP_ENV'].'_'.$this->getUser()->getUsername());
+            'task_list_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+        );
         return $this->redirectToRoute('task_list');
     }
 }

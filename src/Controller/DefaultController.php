@@ -26,6 +26,6 @@ class DefaultController extends AbstractController
         if (!$this->userRepository->findAnonyme() && $this->getUser() && $this->isGranted("ROLE_ADMIN")) {
             $this->userRepository->createAnonyme();
         }
-        return $this->render('default/index.html.twig',['user'=>$this->getUser()]);
+        return $this->render('default/index.html.twig', ['user' => $this->getUser()]);
     }
 }

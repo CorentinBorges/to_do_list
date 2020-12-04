@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repository;
-
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -22,7 +20,7 @@ class UserRepository extends ServiceEntityRepository
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function createAnonyme() : User
+    public function createAnonyme(): User
     {
         $user = new User();
         $user->setPassword('AnonymePass');

@@ -22,28 +22,28 @@ class UserType extends AbstractType
                     'invalid_message' => 'Les deux mots de passe doivent correspondre.',
                     'required' => false,
                     'label' => 'Mot de passe',
-                    'mapped'=>false,
+                    'mapped' => false,
                     'help' => "Si aucun mot de passe n'est entré, le mot de passe d'origine est sauvegardé"
                 ])
                 ->add('email', EmailType::class, [
                     'label' => 'Adresse email',
                     'label_attr' => ['class' => 'mr-2'],
                 ])
-                ->add('roleUser', CheckboxType::class,[
+                ->add('roleUser', CheckboxType::class, [
                     'mapped' => false,
                     'required' => false,
                     'label' => 'User',
                     'label_attr' => ['class' => 'mr-2'],
                     'attr' => ['checked' => 'checked',]
                 ])
-                ->add('roleAdmin', CheckboxType::class,[
+                ->add('roleAdmin', CheckboxType::class, [
                     'mapped' => false,
                     'required' => false,
                     'label' => 'Admin',
                     'label_attr' => ['class' => 'mr-2'],
                     'attr' => ['class' => 'false' ]
                 ]);
-        } else{
+        } else {
             $builder
                 ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
                 ->add('password', RepeatedType::class, [
@@ -57,14 +57,14 @@ class UserType extends AbstractType
                     'label' => 'Adresse email',
                     'label_attr' => ['class' => 'mr-2'],
                 ])
-                ->add('roleUser', CheckboxType::class,[
+                ->add('roleUser', CheckboxType::class, [
                     'mapped' => false,
                     'required' => false,
                     'label' => 'User',
                     'label_attr' => ['class' => 'mr-2'],
                     'attr' => ['checked' => 'checked',]
                 ])
-                ->add('roleAdmin', CheckboxType::class,[
+                ->add('roleAdmin', CheckboxType::class, [
                     'mapped' => false,
                     'required' => false,
                     'label' => 'Admin',
@@ -72,13 +72,12 @@ class UserType extends AbstractType
                     'attr' => ['class' => 'false' ]
                 ]);
         }
-
     }
 
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
-            'is_edit'=>false
+            'is_edit' => false
         ]);
         $options->setAllowedTypes('is_edit', 'bool');
     }
