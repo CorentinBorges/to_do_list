@@ -52,7 +52,7 @@ class User implements UserInterface
      *
      * @ORM\Column (type="json")
      */
-    private $roles=[];
+    private $roles = [];
 
     public function __construct()
     {
@@ -87,7 +87,7 @@ class User implements UserInterface
     /**
      * @return Collection|Task[]
      */
-    public function getTasks() : Collection
+    public function getTasks(): Collection
     {
         return $this->tasks;
     }
@@ -119,20 +119,18 @@ class User implements UserInterface
 
     public function setRoles(string $role)
     {
-        if ($role === 'admin' ) {
-            $this->roles=['ROLE_ADMIN','ROLE_USER'];
-        }
-        elseif ($role === 'user' ) {
-            $this->roles=['ROLE_USER'];
-        }
-        else{
+        if ($role === 'admin') {
+            $this->roles = ['ROLE_ADMIN','ROLE_USER'];
+        } elseif ($role === 'user') {
+            $this->roles = ['ROLE_USER'];
+        } else {
             throw new \InvalidArgumentException("role can just be 'user' or 'admin'");
         }
     }
 
     public function isAdmin()
     {
-        return in_array('ROLE_ADMIN',$this->roles);
+        return in_array('ROLE_ADMIN', $this->roles);
     }
 
     public function eraseCredentials()
