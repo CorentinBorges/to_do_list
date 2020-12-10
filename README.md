@@ -24,10 +24,13 @@ The ToDo&Co application
 
 3.  Configure your database in [.env](.env)
     ```
-    DATABASE_URL= mysql://username:password@host:port/dbName?serverVersion=phpVersion
+    DATABASE_URL= mysql://username:password@host:port/dbName?serverVersion=mysqlVersion
     ```
 
-4.  Create the database and export fixtures (pass for all clients: 'ClientBilemo0', pass Admin:'AdminBilemo0' )
+4.  Create the database and export fixtures 
+    (UserIds: username='Jhon Doe', pass= 'userPass'; 
+     AdminIds: username='Admin', pass='adminPass)
+    
     ```bash
     php bin/console doctrine:database:create
     php bin/console doctrine:migration:migrate
