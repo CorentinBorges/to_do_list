@@ -1,13 +1,11 @@
-# BileMo API
+# ToDo&Co
 
-<a href="https://codeclimate.com/github/CorentinBorges/bileMo/maintainability"><img src="https://api.codeclimate.com/v1/badges/00d77ce3da0f8fc0245c/maintainability" /></a>
-
-The BileMo API to have the best phone catalogue
+The ToDo&Co application
 
 ## Required
 
 * Symfony 5.1
-* WAMP Server
+* MAMP Server
     * PHP 7.4.1
     * MySQL 5.7
     * composer 2.0.4
