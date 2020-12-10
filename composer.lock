@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f423189fd8fc5fc3681f9d309c90983",
+    "content-hash": "e6279f68bb8cf6b79635938a931577e7",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -6307,6 +6307,55 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "friendsoftwig/twigcs",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/friendsoftwig/twigcs.git",
+                "reference": "14b7993651de8b5fd74184350cf49454d8d8941a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/friendsoftwig/twigcs/zipball/14b7993651de8b5fd74184350cf49454d8d8941a",
+                "reference": "14b7993651de8b5fd74184350cf49454d8d8941a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0",
+                "symfony/console": "^3.4 || ^4.3 || ^5.0",
+                "symfony/filesystem": "^3.4 || ^4.3 || ^5.0",
+                "symfony/finder": "^3.4 || ^4.3 || ^5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5 || ^7.2"
+            },
+            "bin": [
+                "bin/twigcs"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FriendsOfTwig\\Twigcs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tristan Maindron",
+                    "email": "tmaindron@gmail.com"
+                }
+            ],
+            "description": "Checkstyle automation for Twig",
+            "support": {
+                "issues": "https://github.com/friendsoftwig/twigcs/issues",
+                "source": "https://github.com/friendsoftwig/twigcs/tree/v4.0.0"
+            },
+            "time": "2020-10-26T23:53:19+00:00"
+        },
         {
             "name": "myclabs/deep-copy",
             "version": "1.10.2",

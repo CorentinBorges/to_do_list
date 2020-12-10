@@ -25,6 +25,7 @@
         "symfony/yaml": "4.4.*"
     },
     "require-dev": {
+        "friendsoftwig/twigcs": "^4.0",
         "phpunit/phpunit": "^9.4",
         "symfony/stopwatch": "^4.4",
         "symfony/web-profiler-bundle": "^4.4"

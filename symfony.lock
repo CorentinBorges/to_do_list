@@ -78,6 +78,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "friendsoftwig/twigcs": {
+        "version": "v4.0.0"
+    },
     "laminas/laminas-code": {
         "version": "3.5.0"
     },
