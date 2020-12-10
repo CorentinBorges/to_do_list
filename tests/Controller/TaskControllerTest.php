@@ -8,6 +8,7 @@ use App\Tests\AbstractWebTestCase;
 
 class TaskControllerTest extends AbstractWebTestCase
 {
+
     public function testDeleteTask()
     {
         $user=$this->createUser();
@@ -301,14 +302,5 @@ class TaskControllerTest extends AbstractWebTestCase
         self::assertEquals(302,$this->client->getResponse()->getStatusCode());
         self::assertResponseRedirects($uriLogin);
     }
-
-//    public function testTaskCreateActionWithDatas()
-//    {
-//        $this->client->request('get', '/tasks/create');
-//        self::assertEquals(200,$this->client->getResponse()->getStatusCode());
-//        self::assertStringContainsString('Title',$this->client->getResponse());
-//    }
-
-
 
 }
