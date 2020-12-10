@@ -36,7 +36,7 @@ The ToDo&Co application
    (UserIds: username='Jhon Doe', pass= 'userPass';
    AdminIds: username='Admin', pass='adminPass)
    ```bash
-       php bin/console doctrine:fixtures:load
+    php bin/console doctrine:fixtures:load
     ```
 
 5. Connect the website locally with symfony:
