@@ -38,7 +38,6 @@ class UserController extends AbstractController
         $users = $this->userCache->getList('users_list_' . $_SERVER['APP_ENV'], 259200);
         return $this->render('user/list.html.twig', ['users' => $users]);
     }
-    //todo: user have the roles user AND admin
 
     /**
      * @Route("/users/create", name="user_create")

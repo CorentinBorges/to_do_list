@@ -23,7 +23,6 @@ use Symfony\Component\Security\Core\Security;
  */
 class TaskController extends AbstractController
 {
-    //todo: edit audit with butons
 
     private TaskCache $taskCache;
 
