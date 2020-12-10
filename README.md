@@ -27,17 +27,19 @@ The ToDo&Co application
     DATABASE_URL= mysql://username:password@host:port/dbName?serverVersion=mysqlVersion
     ```
 
-4.  Create the database and export fixtures 
-    (UserIds: username='Jhon Doe', pass= 'userPass'; 
-     AdminIds: username='Admin', pass='adminPass)
-    
+4.  Create the database
     ```bash
     php bin/console doctrine:database:create
     php bin/console doctrine:migration:migrate
-    php bin/console doctrine:fixtures:load
+    ```
+5. You can export fixtures **in dev environment**, if you want to try the project
+   (UserIds: username='Jhon Doe', pass= 'userPass';
+   AdminIds: username='Admin', pass='adminPass)
+   ```bash
+       php bin/console doctrine:fixtures:load
     ```
 
-6. Connect the website locally with symfony:
+5. Connect the website locally with symfony:
     ```
     symfony serve -d
     ```
