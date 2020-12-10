@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Cache;
-
 
 use App\Repository\UserRepository;
 use Psr\Cache\CacheItemInterface;
@@ -27,7 +25,7 @@ class UserCache
     public function __construct(
         UserRepository $userRepository,
         Security $security
-    ){
+    ) {
 
         $this->userRepository = $userRepository;
         $this->security = $security;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Cache;
 
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
@@ -20,6 +19,5 @@ class CacheKernel extends HttpCache
             'trace_level' => 'none',
             'trace_header' => 'X-Symfony-Cache',
         ];
-
     }
 }

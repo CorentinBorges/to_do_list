@@ -15,8 +15,6 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 abstract class AbstractWebTestCase extends WebTestCase
 {
@@ -100,7 +98,6 @@ abstract class AbstractWebTestCase extends WebTestCase
     {
         $user = $this->createAnonymeUser();
         $task = new Task();
-        $task->setUser($user);
         $task->setTitle('Test Task');
         $task->setContent('Content test');
         if ($isDone) {

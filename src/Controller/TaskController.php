@@ -33,8 +33,10 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks", name="task_list")
+     * @param UserRepository $userRepository
+     * @return Response
      */
-    public function listAction()
+    public function listAction(UserRepository $userRepository): Response
     {
         /**
          * @var User $user
@@ -48,9 +50,8 @@ class TaskController extends AbstractController
                 false,
                 $user
             );
-        } else {
-            $tasks = [];
         }
+
         $page = 'list_not_done';
 
 
@@ -63,8 +64,10 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasksDone", name="task_done")
+     * @param UserRepository $userRepository
+     * @return Response
      */
-    public function listDoneTasks()
+    public function listDoneTasks(UserRepository $userRepository): Response
     {
         /**
          * @var User $user
@@ -78,8 +81,6 @@ class TaskController extends AbstractController
                 true,
                 $user
             );
-        } else {
-            $tasks = [];
         }
 
         $page = 'list_done';
@@ -107,18 +108,11 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            if ($this->getUser()) {
                 /**
                  * @var User $user
                  */
                 $user = $this->getUser();
-            } else {
-                if ($userRepository->findOneBy(['username' => 'anonyme'])) {
-                    $user = $userRepository->findOneBy(['username' => 'anonyme']);
-                } else {
-                    $user = $userRepository->createAnonyme();
-                }
-            }
+
             $task->setUser($user);
 
             $em->persist($task);
