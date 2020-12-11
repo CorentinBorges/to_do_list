@@ -49,32 +49,13 @@ class TaskCache
          * @var CacheItemInterface $element
          */
         $element = $this->filesystemAdapter->getItem($itemName);
-        $this->filesystemAdapter->delete($itemName);
+//        $this->filesystemAdapter->delete($itemName);
         if (!$element->isHit() || $_SERVER['APP_ENV'] === 'test') {
             $tasks = $this->taskRepository->findBy(['user' => $user, 'isDone' => $taskDone]);
             if ($this->security->isGranted('ROLE_ADMIN')) {
                 foreach ($this->taskRepository->findTaskWithUserNull($taskDone) as $newTask) {
                     $tasks[] = $newTask;
                 }
-//                /**
-//                 * @var User $anonUser
-//                 */
-//                $anonUser = $this->userRepository->findAnonyme();
-//                if ($this->taskRepository->findBy(['user' => null] )) {
-//                    foreach ($this->taskRepository->findBy(['user' => null]) as $anonTask){
-//                        /**
-//                         * @var Task $anonTask
-//                         */
-//                        $anonTask->setUser($anonUser);
-//                    }
-//                }
-//                    if ($this->userRepository->findAnonyme()) {
-//                        foreach ($this->taskRepository->findBy(['user' => $anonUser]) as $newTask){
-//                            if ($newTask->isDone() === $taskDone) {
-//                                $tasks[] = $newTask;
-//                            }
-//                        }
-//                    }
             }
             $element->expiresAfter($expiredAfter);
             $element->set($tasks);
