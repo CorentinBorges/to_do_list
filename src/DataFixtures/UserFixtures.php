@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\DataFixtures;
-
 
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -25,21 +23,20 @@ class UserFixtures extends Fixture
     {
         $user = new User();
         $user->setUsername('Jhon Doe');
-        $user->setPassword($this->passwordEncoder->encodePassword($user,'userPass'));
+        $user->setPassword($this->passwordEncoder->encodePassword($user, 'userPass'));
         $user->setEmail('user@gmail.com');
         $user->setRoles("user");
-        $this->setReference( 'normalUser', $user);
+        $this->setReference('normalUser', $user);
         $manager->persist($user);
 
         $adminUser = new User();
         $adminUser->setUsername('Admin');
-        $adminUser->setPassword($this->passwordEncoder->encodePassword($adminUser,'adminPass'));
+        $adminUser->setPassword($this->passwordEncoder->encodePassword($adminUser, 'adminPass'));
         $adminUser->setEmail('userAdmin@gmail.com');
         $adminUser->setRoles("admin");
         $this->setReference('adminUser', $adminUser);
         $manager->persist($adminUser);
 
         $manager->flush();
-
     }
 }
