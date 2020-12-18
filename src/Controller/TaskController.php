@@ -6,7 +6,6 @@ use App\Cache\TaskCache;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
-use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,10 +32,9 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks", name="task_list")
-     * @param UserRepository $userRepository
      * @return Response
      */
-    public function listAction(UserRepository $userRepository): Response
+    public function listAction(): Response
     {
         /**
          * @var User $user
@@ -63,11 +61,10 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/tasksDone", name="task_done")
-     * @param UserRepository $userRepository
+     * @Route("/tasks/done", name="task_done")
      * @return Response
      */
-    public function listDoneTasks(UserRepository $userRepository): Response
+    public function listDoneTasks(): Response
     {
         /**
          * @var User $user
@@ -95,10 +92,9 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      * @param Request $request
-     * @param UserRepository $userRepository
      * @return RedirectResponse|Response
      */
-    public function createAction(Request $request, UserRepository $userRepository)
+    public function createAction(Request $request)
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -120,6 +116,8 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
             $this->taskCache->deleteCache('task_list_' . $_SERVER['APP_ENV'] . '_' . $user->getUsername());
+            $this->taskCache->deleteCache('task_list_done' . $_SERVER['APP_ENV'] . '_' . $user->getUsername());
+
 
             return $this->redirectToRoute('task_list');
         }
@@ -180,10 +178,20 @@ class TaskController extends AbstractController
      */
     public function toggleTaskAction(Task $task)
     {
+
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
-
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        if ($task->isDone()==true) {
+            $this->addFlash(
+                'success',
+                sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle())
+            );
+        } else{
+            $this->addFlash(
+                'success',
+                sprintf('La tâche %s a bien été marquée comme non terminée', $task->getTitle())
+            );
+        }
 
         $this->taskCache->deleteCache(
             'task_list_done_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
