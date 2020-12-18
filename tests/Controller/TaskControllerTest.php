@@ -239,7 +239,7 @@ class TaskControllerTest extends AbstractWebTestCase
     {
         $uriLogin = $this->client->request('GET', '/login')->getBaseHref();
 
-        $this->client->request('GET', '/tasksDone');
+        $this->client->request('GET', '/tasks/done');
         self::assertEquals(302,$this->client->getResponse()->getStatusCode());
         self::assertResponseRedirects($uriLogin);
     }
@@ -249,7 +249,7 @@ class TaskControllerTest extends AbstractWebTestCase
         $user = $this->createUser();
         $this->logIn($user);
 
-        $this->client->request('GET', '/tasksDone');
+        $this->client->request('GET', '/tasks/done');
         self::assertEquals(200,$this->client->getResponse()->getStatusCode());
         self::assertStringContainsString(
             "Il n'y a pas de tâches terminées.",
@@ -265,7 +265,7 @@ class TaskControllerTest extends AbstractWebTestCase
         $this->createAnonymeTask();
         $this->createTask($user, false,'undone task');
 
-        $this->client->request('GET', '/tasksDone');
+        $this->client->request('GET', '/tasks/done');
         self::assertEquals(200,$this->client->getResponse()->getStatusCode());
         self::assertStringContainsString(
             "Créé par userTest",
@@ -283,7 +283,7 @@ class TaskControllerTest extends AbstractWebTestCase
         $this->createAnonymeTask(true);
         $this->createTask($user, false,'undone task');
 
-        $this->client->request('GET', '/tasksDone');
+        $this->client->request('GET', '/tasks/done');
         self::assertEquals(200,$this->client->getResponse()->getStatusCode());
         self::assertStringContainsString(
             "Content test",
