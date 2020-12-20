@@ -38,7 +38,7 @@ class UserCache
          * @var CacheItemInterface $element
          */
         $element = $this->cache->getItem($itemName);
-
+//        $this->cache->delete($itemName);
         if (!$element->isHit()) {
             $users = $this->userRepository->findAll();
             $element->expiresAfter($expiredAt);
