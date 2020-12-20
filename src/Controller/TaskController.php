@@ -214,6 +214,7 @@ class TaskController extends AbstractController
     public function deleteTaskAction(Task $task)
     {
         $em = $this->getDoctrine()->getManager();
+        $isDone = $task->isDone();
         $em->remove($task);
         $em->flush();
 
@@ -221,6 +222,13 @@ class TaskController extends AbstractController
         $this->taskCache->deleteCache(
             'task_list_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
         );
-        return $this->redirectToRoute('task_list');
+        $this->taskCache->deleteCache(
+            'task_list_done_' . $_SERVER['APP_ENV'] . '_' . $this->getUser()->getUsername()
+        );
+        if ($isDone) {
+            return $this->redirectToRoute('task_done');
+        } else {
+            return $this->redirectToRoute('task_list') ;
+        }
     }
 }
